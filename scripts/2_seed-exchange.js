@@ -41,6 +41,11 @@ async function main() {
   let transaction, result;
   transaction = await mETH.connect(sender).transfer(receiver.address, amount);
 
+  // Set up exchange users
+  const user1 = accounts[0];
+  const user2 = accounts[1];
+  amount = tokens(10000);
+
   // Distribute tokens
 
   // Deposit tokens to exchange
