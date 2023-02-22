@@ -27,7 +27,7 @@ async function main() {
   await mDAI.deployed();
   console.log(`mDAI Deployed to: ${mDAI.address}`);
 
-  const exchange = await Exchange.deploy(accounts[1], 10);
+  const exchange = await Exchange.deploy(accounts[1].address, 10);
   await exchange.deployed();
   console.log(`Exchange Deployed to: ${exchange.address}`);
 }
