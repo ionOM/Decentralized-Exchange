@@ -74,7 +74,7 @@ contract Exchange {
         require(Token(_token).transferFrom(msg.sender, address(this), _amount));
 
         // Update user balance
-        tokens[_token][msg.sender] = tokens[_token][msg.sender] + _amount;
+        tokens[_token][msg.sender] += _amount;
 
         // Emit an event
         emit Deposit(_token, msg.sender, _amount, tokens[_token][msg.sender]);
@@ -88,7 +88,7 @@ contract Exchange {
         Token(_token).transfer(msg.sender, _amount);
 
         // Update user balance
-        tokens[_token][msg.sender] = tokens[_token][msg.sender] - _amount;
+        tokens[_token][msg.sender] -= _amount;
 
         // Emit event
         emit Withdraw(_token, msg.sender, _amount, tokens[_token][msg.sender]);
