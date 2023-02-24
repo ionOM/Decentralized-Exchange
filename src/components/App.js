@@ -1,6 +1,16 @@
+import { useEffect } from "react";
 import "../App.css";
 
 function App() {
+  const loadBlockchainData = async () => {
+    await window.ethereum.request({ method: `eth_requestAccounts` });
+    console.log(accounts[0]);
+  };
+
+  useEffect(() => {
+    loadBlockchainData();
+  });
+
   return (
     <div>
       {/* Navbar */}
