@@ -1,5 +1,5 @@
-const { ethers } = require("hardhat");
 const { expect } = require("chai");
+const { ethers } = require("hardhat");
 
 const tokens = (n) => {
   return ethers.utils.parseUnits(n.toString(), "ether");
@@ -9,9 +9,8 @@ describe("Token", () => {
   let token, accounts, deployer, receiver, exchange;
 
   beforeEach(async () => {
-    // Fetch Token from Blockchain
     const Token = await ethers.getContractFactory("Token");
-    token = await Token.deploy("Dapp University", "DAPP", "1000000");
+    token = await Token.deploy("Test Tether", "tUSDT", "1000000");
 
     accounts = await ethers.getSigners();
     deployer = accounts[0];
@@ -20,13 +19,13 @@ describe("Token", () => {
   });
 
   describe("Deployment", () => {
-    const name = "Dapp University";
-    const symbol = "DAPP";
+    const name = "Test Tether";
+    const symbol = "tUSDT";
     const decimals = "18";
-    const totalSuply = tokens("1000000");
+    const totalSupply = tokens("1000000");
+
     it("has correct name", async () => {
-      // Check that name is correct
-      expect(name).to.equal(name);
+      expect(await token.name()).to.equal(name);
     });
 
     it("has correct symbol", async () => {
@@ -37,12 +36,12 @@ describe("Token", () => {
       expect(await token.decimals()).to.equal(decimals);
     });
 
-    it("has correct totalSuply", async () => {
-      expect(await token.totalSupply()).to.equal(totalSuply);
+    it("has correct total supply", async () => {
+      expect(await token.totalSupply()).to.equal(totalSupply);
     });
 
-    it("assigns total supply to developer", async () => {
-      expect(await token.balanceOf(deployer.address)).to.equal(totalSuply);
+    it("assigns total supply to deployer", async () => {
+      expect(await token.balanceOf(deployer.address)).to.equal(totalSupply);
     });
   });
 
@@ -51,7 +50,6 @@ describe("Token", () => {
 
     describe("Success", () => {
       beforeEach(async () => {
-        // Transfer Tokens
         amount = tokens(100);
         transaction = await token
           .connect(deployer)
@@ -59,8 +57,7 @@ describe("Token", () => {
         result = await transaction.wait();
       });
 
-      it("transfer token balances", async () => {
-        // Ensure that tokens were transfered (balance changed)
+      it("transfers token balances", async () => {
         expect(await token.balanceOf(deployer.address)).to.equal(
           tokens(999900)
         );
@@ -79,10 +76,9 @@ describe("Token", () => {
     });
 
     describe("Failure", () => {
-      it("rejects insuficient balances", async () => {
-        // Transfer more tokens than deployer has - 100M
+      it("rejects insufficient balances", async () => {
         const invalidAmount = tokens(100000000);
-        expect(
+        await expect(
           token.connect(deployer).transfer(receiver.address, invalidAmount)
         ).to.be.reverted;
       });
@@ -128,7 +124,7 @@ describe("Token", () => {
     });
 
     describe("Failure", () => {
-      it("rejects invalid spender", async () => {
+      it("rejects invalid spenders", async () => {
         await expect(
           token
             .connect(deployer)
@@ -151,14 +147,13 @@ describe("Token", () => {
 
     describe("Success", () => {
       beforeEach(async () => {
-        amount = tokens(100);
         transaction = await token
           .connect(exchange)
           .transferFrom(deployer.address, receiver.address, amount);
         result = await transaction.wait();
       });
 
-      it("transfer token balances", async () => {
+      it("transfers token balances", async () => {
         expect(await token.balanceOf(deployer.address)).to.be.equal(
           ethers.utils.parseUnits("999900", "ether")
         );
@@ -182,15 +177,14 @@ describe("Token", () => {
       });
     });
 
-    describe("Failure", () => {
-      it("Rejects insufficient amounts", async () => {
-        const invalidAmount = tokens(100000000);
-        await expect(
-          token
-            .connect(exchange)
-            .transferFrom(deployer.address, receiver.address, invalidAmount)
-        ).to.be.reverted;
-      });
+    describe("Failure", async () => {
+      // Attempt to transfer too many tokens
+      const invalidAmount = tokens(100000000); // 100 Million, greater than total supply
+      await expect(
+        token
+          .connect(exchange)
+          .transferFrom(deployer.address, receiver.address, invalidAmount)
+      ).to.be.reverted;
     });
   });
 });

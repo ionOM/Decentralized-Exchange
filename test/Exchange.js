@@ -14,8 +14,8 @@ describe("Exchange", () => {
     const Exchange = await ethers.getContractFactory("Exchange");
     const Token = await ethers.getContractFactory("Token");
 
-    token1 = await Token.deploy("Dapp University", "DAPP", "1000000");
-    token2 = await Token.deploy("Mock Dai", "mDAI", "1000000");
+    token1 = await Token.deploy("Test Tether", "tUSDT", "1000000");
+    token2 = await Token.deploy("Test Bitcoin", "tBTC", "1000000");
 
     accounts = await ethers.getSigners();
     deployer = accounts[0];
@@ -329,13 +329,13 @@ describe("Exchange", () => {
     describe("Filling orders", async () => {
       describe("Success", () => {
         beforeEach(async () => {
-          // User2 fills order
+          // user2 fills order
           transaction = await exchange.connect(user2).fillOrder("1");
           result = await transaction.wait();
         });
 
         it("executes the trade and charge fees", async () => {
-          // Token give
+          // Token Give
           expect(
             await exchange.balanceOf(token1.address, user1.address)
           ).to.equal(tokens(0));
@@ -391,7 +391,7 @@ describe("Exchange", () => {
           await expect(exchange.connect(user2).fillOrder(1)).to.be.reverted;
         });
 
-        it("rejects canceled orders", async () => {
+        it("Rejects canceled orders", async () => {
           transaction = await exchange.connect(user1).cancelOrder(1);
           await transaction.wait();
 

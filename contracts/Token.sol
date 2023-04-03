@@ -1,5 +1,5 @@
-//SPDX-License-Identifier: MIT
-pragma solidity ^0.8.17;
+//SPDX-License-Identifier: Unlicense
+pragma solidity ^0.8.18;
 
 import "hardhat/console.sol";
 
@@ -44,6 +44,7 @@ contract Token {
 
     function _transfer(address _from, address _to, uint256 _value) internal {
         require(_to != address(0));
+
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
 
@@ -67,13 +68,9 @@ contract Token {
         address _to,
         uint256 _value
     ) public returns (bool success) {
-        require(_value <= balanceOf[_from], "Insufficient balance");
-        require(
-            _value <= allowance[_from][msg.sender],
-            "Insufficient allowance"
-        );
+        require(_value <= balanceOf[_from]);
+        require(_value <= allowance[_from][msg.sender]);
 
-        // Reset Allowance
         allowance[_from][msg.sender] -= _value;
 
         _transfer(_from, _to, _value);

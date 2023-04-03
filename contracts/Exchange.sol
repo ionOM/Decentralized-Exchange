@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: Unlicense
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.18;
 
 import "hardhat/console.sol";
 import "./Token.sol";
@@ -38,7 +38,6 @@ contract Exchange {
         uint256 amountGive,
         uint256 timestamp
     );
-
     event Trade(
         uint256 id,
         address user,
@@ -103,6 +102,7 @@ contract Exchange {
 
     // ------------------------
     // MAKE & CANCEL ORDERS
+
     function makeOrder(
         address _tokenGet,
         uint256 _amountGet,
@@ -161,19 +161,20 @@ contract Exchange {
         );
     }
 
-    // ----------------------------------
+    // ------------------------
     // EXECUTING ORDERS
 
     function fillOrder(uint256 _id) public {
-        // 1. Must be valid order
+        // 1. Must be valid orderId
         require(_id > 0 && _id <= orderCount, "Order does not exist");
-        // 2. Order can't bi filled
+        // 2. Order can't be filled
         require(!orderFilled[_id]);
         // 3. Order can't be cancelled
         require(!orderCancelled[_id]);
 
         // Fetch order
         _Order storage _order = orders[_id];
+
         // Execute the trade
         _trade(
             _order.id,
@@ -196,13 +197,14 @@ contract Exchange {
         address _tokenGive,
         uint256 _amountGive
     ) internal {
-        // Fee is paid by user who filled de order (msg.sender)
+        // Fee is paid by the user who filled the order (msg.sender)
         // Fee is deducted from _amountGet
         uint256 _feeAmount = (_amountGet * feePercent) / 100;
 
         // Execute the trade
-        // msg.sender is the user who filed the order, while _user is who created the order
+        // msg.sender is the user who filled the order, while _user is who created the order
         tokens[_tokenGet][msg.sender] -= (_amountGet + _feeAmount);
+
         tokens[_tokenGet][_user] += _amountGet;
 
         // Charge fees
