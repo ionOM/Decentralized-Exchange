@@ -13,19 +13,19 @@ async function main() {
   );
 
   // Deploy contracts
-  const dapp = await Token.deploy("Dapp University", "DAPP", "1000000");
-  await dapp.deployed();
-  console.log(`DAPP Deployed to: ${dapp.address}`);
+  const tusdt = await Token.deploy("Test Tether", "tUSDT", "1000000");
+  await tusdt.deployed();
+  console.log(`tUSDT Deployed to: ${tusdt.address}`);
 
-  const mETH = await Token.deploy("mETH", "mETH", "1000000");
-  await mETH.deployed();
-  console.log(`mETH Deployed to: ${mETH.address}`);
+  const teth = await Token.deploy("Test Ethereum", "tETH", "1000000");
+  await teth.deployed();
+  console.log(`tETH Deployed to: ${teth.address}`);
 
-  const mDAI = await Token.deploy("mDAI", "mDAI", "1000000");
-  await mDAI.deployed();
-  console.log(`mDAI Deployed to: ${mDAI.address}`);
+  const tbtc = await Token.deploy("Test Bitcoin", "tBTC", "1000000");
+  await tbtc.deployed();
+  console.log(`tBTC Deployed to: ${tbtc.address}`);
 
-  const exchange = await Exchange.deploy(accounts[1].address, 10);
+  const exchange = await Exchange.deploy(accounts[1].address, 1);
   await exchange.deployed();
   console.log(`Exchange Deployed to: ${exchange.address}`);
 }
