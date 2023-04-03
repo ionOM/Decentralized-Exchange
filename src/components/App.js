@@ -17,7 +17,10 @@ import Markets from "./Markets";
 import Balance from "./Balance";
 import Order from "./Order";
 import PriceChart from "./PriceChart";
+import Transactions from "./Transactions";
+import Trades from "./Trades";
 import OrderBook from "./OrderBook";
+import Alert from "./Alert";
 
 function App() {
   const dispatch = useDispatch();
@@ -40,9 +43,9 @@ function App() {
     });
 
     // Load token smart contracts
-    const DApp = config[chainId].DApp;
-    const mETH = config[chainId].mETH;
-    await loadTokens(provider, [DApp.address, mETH.address], dispatch);
+    const tUSDT = config[chainId].tUSDT;
+    const tETH = config[chainId].tETH;
+    await loadTokens(provider, [tUSDT.address, tETH.address], dispatch);
 
     // Load exchange smart contract
     const exchangeConfig = config[chainId].exchange;
@@ -78,15 +81,15 @@ function App() {
         <section className="exchange__section--right grid">
           <PriceChart />
 
-          {/* Transactions */}
+          <Transactions />
 
-          {/* Trades */}
+          <Trades />
 
           <OrderBook />
         </section>
       </main>
 
-      {/* Alert */}
+      <Alert />
     </div>
   );
 }
