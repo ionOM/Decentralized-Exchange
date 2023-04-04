@@ -1,5 +1,6 @@
 require("@nomiclabs/hardhat-waffle");
 require("dotenv").config();
+
 const privateKeys = process.env.PRIVATE_KEYS || "";
 
 // This is a sample Hardhat task. To learn how to create your own go to
